@@ -16,7 +16,7 @@ const cleanParams = (
 ): Record<string, any> =>
   Object.entries(params).reduce<Record<string, any>>((result, [key, value]) => {
     const cleanFn = cleaners[key];
-    return { ...result, [key]: cleanFn ? (cleanFn as CleanFn)(value) : value };
+    return { ...result, [key]: cleanFn ? cleanFn(value) : value };
   }, {});
 
 export const createPerform = (
