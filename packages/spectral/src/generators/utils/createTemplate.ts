@@ -36,11 +36,11 @@ export const createTemplate = async ({
         console.info("");
         console.info(`Rendering ${source} to ${destination}`);
         console.info(
-          "---------------------------- Start ----------------------------"
+          "---------------------------- Start ----------------------------",
         );
         console.info(formattedRender);
         console.info(
-          "---------------------------- End ----------------------------"
+          "---------------------------- End ----------------------------",
         );
         console.info("");
         return;

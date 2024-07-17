@@ -95,7 +95,7 @@ export const runMain = async (process: NodeJS.Process) => {
 
   if (!existsSync(componentDistDir)) {
     console.error(
-      "Component build directory `dist` does not exist. Please verify that the component has been built."
+      "Component build directory `dist` does not exist. Please verify that the component has been built.",
     );
     process.exit(1);
   }
@@ -141,7 +141,7 @@ export const runMain = async (process: NodeJS.Process) => {
           "..",
           flags.name.value
             ? flags.name.value
-            : `${path.basename(componentDir)}-manifest`
+            : `${path.basename(componentDir)}-manifest`,
         ),
     registry: flags.registry.value ?? null,
   });

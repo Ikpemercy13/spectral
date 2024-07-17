@@ -30,7 +30,7 @@ export const convertInput = (
     label,
     collection,
     ...rest
-  }: InputFieldDefinition | OnPremConnectionInput
+  }: InputFieldDefinition | OnPremConnectionInput,
 ): ServerInput => {
   const keyLabel =
     collection === "keyvaluelist" && typeof label === "object"
@@ -57,14 +57,14 @@ const convertAction = (
     perform,
     ...action
   }: ActionDefinition<Inputs, any, boolean, any>,
-  hooks?: ComponentHooks
+  hooks?: ComponentHooks,
 ): ServerAction => {
   const convertedInputs = Object.entries(inputs).map(([key, value]) =>
-    convertInput(key, value)
+    convertInput(key, value),
   );
   const inputCleaners = Object.entries(inputs).reduce<InputCleaners>(
     (result, [key, { clean }]) => ({ ...result, [key]: clean }),
-    {}
+    {},
   );
 
   return {
@@ -87,14 +87,14 @@ const convertTrigger = (
     onInstanceDelete,
     ...trigger
   }: TriggerDefinition<Inputs, any, boolean, any>,
-  hooks?: ComponentHooks
+  hooks?: ComponentHooks,
 ): ServerTrigger => {
   const convertedInputs = Object.entries(inputs).map(([key, value]) =>
-    convertInput(key, value)
+    convertInput(key, value),
   );
   const inputCleaners = Object.entries(inputs).reduce<InputCleaners>(
     (result, [key, { clean }]) => ({ ...result, [key]: clean }),
-    {}
+    {},
   );
 
   const result: ServerTrigger = {
@@ -133,14 +133,14 @@ const convertDataSource = (
     perform,
     ...dataSource
   }: DataSourceDefinition<Inputs, ConfigVarResultCollection, any>,
-  hooks?: ComponentHooks
+  hooks?: ComponentHooks,
 ): ServerDataSource => {
   const convertedInputs = Object.entries(inputs).map(([key, value]) =>
-    convertInput(key, value)
+    convertInput(key, value),
   );
   const inputCleaners = Object.entries(inputs).reduce<InputCleaners>(
     (result, [key, { clean }]) => ({ ...result, [key]: clean }),
-    {}
+    {},
   );
 
   return {
@@ -159,7 +159,7 @@ const convertConnection = ({
   ...connection
 }: ConnectionDefinition): ServerConnection => {
   const convertedInputs = Object.entries(inputs).map(([key, value]) =>
-    convertInput(key, value)
+    convertInput(key, value),
   );
 
   return {
@@ -181,7 +181,7 @@ export const convertComponent = <TPublic extends boolean, TKey extends string>({
       ...result,
       [actionKey]: convertAction(actionKey, action, hooks),
     }),
-    {}
+    {},
   );
 
   const convertedTriggers = Object.entries(triggers).reduce(
@@ -189,7 +189,7 @@ export const convertComponent = <TPublic extends boolean, TKey extends string>({
       ...result,
       [triggerKey]: convertTrigger(triggerKey, trigger, hooks),
     }),
-    {}
+    {},
   );
 
   const convertedDataSources = Object.entries(dataSources).reduce(
@@ -197,7 +197,7 @@ export const convertComponent = <TPublic extends boolean, TKey extends string>({
       ...result,
       [dataSourceKey]: convertDataSource(dataSourceKey, dataSource, hooks),
     }),
-    {}
+    {},
   );
 
   return {

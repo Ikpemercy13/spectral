@@ -43,7 +43,7 @@ import {
 } from "./integration";
 
 export const convertIntegration = (
-  definition: IntegrationDefinition
+  definition: IntegrationDefinition,
 ): ServerComponent => {
   // Generate a unique reference key that will be used to reference the
   // actions, triggers, data sources, and connections that are created
@@ -74,24 +74,24 @@ export const convertIntegration = (
                 [key]: element,
               };
             },
-            acc
+            acc,
           ),
-        {}
+        {},
       ),
     }),
-    {}
+    {},
   );
 
   const cniComponent = codeNativeIntegrationComponent(
     definition,
     referenceKey,
-    configVars
+    configVars,
   );
 
   const cniYaml = codeNativeIntegrationYaml(
     definition,
     referenceKey,
-    configVars
+    configVars,
   );
 
   return {
@@ -102,7 +102,7 @@ export const convertIntegration = (
 
 const convertConfigPages = (
   pages: ConfigPages | undefined,
-  userLevelConfigured: boolean
+  userLevelConfigured: boolean,
 ): ServerConfigPage[] => {
   if (!pages || !Object.keys(pages).length) {
     return [];
@@ -122,9 +122,9 @@ const convertConfigPages = (
           : {
               type: "configVar",
               value: key,
-            }
+            },
       ),
-    })
+    }),
   );
 };
 
@@ -144,7 +144,7 @@ const codeNativeIntegrationYaml = (
     componentRegistry = {},
   }: IntegrationDefinition,
   referenceKey: string,
-  configVars: Record<string, ConfigVar>
+  configVars: Record<string, ConfigVar>,
 ): string => {
   // Find the preprocess flow config on the flow, if one exists.
   const preprocessFlows = flows.filter((flow) => flow.preprocessFlowConfig);
@@ -156,7 +156,7 @@ const codeNativeIntegrationYaml = (
 
   if (preprocessFlows.length && triggerPreprocessFlowConfig) {
     throw new Error(
-      "Integration must not define both a Trigger Preprocess Flow Config and a Preprocess Flow."
+      "Integration must not define both a Trigger Preprocess Flow Config and a Preprocess Flow.",
     );
   }
 
@@ -173,7 +173,7 @@ const codeNativeIntegrationYaml = (
     !preprocessFlowConfig
   ) {
     throw new Error(
-      "Integration with specified EndpointType must define either a Trigger Preprocess Flow Config or a Preprocess Flow."
+      "Integration with specified EndpointType must define either a Trigger Preprocess Flow Config or a Preprocess Flow.",
     );
   }
 
@@ -191,24 +191,24 @@ const codeNativeIntegrationYaml = (
     labels,
     requiredConfigVars: Object.entries(configVars || {}).map(
       ([key, configVar]) =>
-        convertConfigVar(key, configVar, referenceKey, componentRegistry)
+        convertConfigVar(key, configVar, referenceKey, componentRegistry),
     ),
     endpointType,
     preprocessFlowName: hasPreprocessFlow ? preprocessFlows[0].name : undefined,
     externalCustomerIdField: fieldNameToReferenceInput(
       hasPreprocessFlow ? "onExecution" : "payload",
-      preprocessFlowConfig?.externalCustomerIdField
+      preprocessFlowConfig?.externalCustomerIdField,
     ),
     externalCustomerUserIdField: fieldNameToReferenceInput(
       hasPreprocessFlow ? "onExecution" : "payload",
-      preprocessFlowConfig?.externalCustomerUserIdField
+      preprocessFlowConfig?.externalCustomerUserIdField,
     ),
     flowNameField: fieldNameToReferenceInput(
       hasPreprocessFlow ? "onExecution" : "payload",
-      preprocessFlowConfig?.flowNameField
+      preprocessFlowConfig?.flowNameField,
     ),
     flows: flows.map((flow) =>
-      convertFlow(flow, componentRegistry, referenceKey)
+      convertFlow(flow, componentRegistry, referenceKey),
     ),
     configPages: [
       ...convertConfigPages(configPages, false),
@@ -300,7 +300,7 @@ const convertConfigVarPermissionAndVisibility = ({
 
 const convertComponentReference = (
   componentReference: ComponentReference,
-  componentRegistry: ComponentRegistry
+  componentRegistry: ComponentRegistry,
 ): {
   ref: ServerComponentReference;
   inputs: Record<string, ServerInput>;
@@ -309,7 +309,7 @@ const convertComponentReference = (
 
   if (!manifest) {
     throw new Error(
-      `Component with key "${componentReference.component}" not found in component registry.`
+      `Component with key "${componentReference.component}" not found in component registry.`,
     );
   }
 
@@ -343,7 +343,7 @@ const convertComponentReference = (
           ]) as {
             permissionAndVisibilityType?: PermissionAndVisibilityType;
             visibleToOrgDeployer?: boolean;
-          }
+          },
         );
 
         return { ...result, [key]: { type: type, value: valueExpr, meta } };
@@ -358,7 +358,7 @@ const convertComponentReference = (
 
       return result;
     },
-    {}
+    {},
   );
 
   return {
@@ -368,14 +368,14 @@ const convertComponentReference = (
 };
 
 const convertComponentRegistry = (
-  componentRegistry: ComponentRegistry
+  componentRegistry: ComponentRegistry,
 ): Array<ServerComponentReference["component"]> =>
   Object.values(componentRegistry).map(
     ({ key, public: isPublic, signature }) => ({
       key,
       signature: signature ?? "",
       isPublic,
-    })
+    }),
   );
 
 /**
@@ -394,7 +394,7 @@ const codeNativeIntegrationComponentReference = (referenceKey: string) => ({
 const convertFlow = (
   flow: Flow,
   componentRegistry: ComponentRegistry,
-  referenceKey: string
+  referenceKey: string,
 ): Record<string, unknown> => {
   const result: Record<string, unknown> = {
     ...flow,
@@ -424,7 +424,7 @@ const convertFlow = (
   } else if (isComponentReference(flow.onTrigger)) {
     const { ref, inputs } = convertComponentReference(
       flow.onTrigger,
-      componentRegistry
+      componentRegistry,
     );
     triggerStep.action = ref;
     triggerStep.inputs = inputs;
@@ -478,7 +478,7 @@ const convertFlow = (
 /** Converts an input value to the expected server type by its collection type */
 const convertInputValue = (
   value: unknown,
-  collectionType: CollectionType | undefined
+  collectionType: CollectionType | undefined,
 ) => {
   if (collectionType !== "keyvaluelist") {
     return value;
@@ -499,10 +499,10 @@ const convertConfigVar = (
   key: string,
   configVar: ConfigVar,
   referenceKey: string,
-  componentRegistry: ComponentRegistry
+  componentRegistry: ComponentRegistry,
 ): ServerRequiredConfigVariable => {
   const { orgOnly, meta } = convertConfigVarPermissionAndVisibility(
-    pick(configVar, ["permissionAndVisibilityType", "visibleToOrgDeployer"])
+    pick(configVar, ["permissionAndVisibilityType", "visibleToOrgDeployer"]),
   );
 
   if (isConnectionDefinitionConfigVar(configVar)) {
@@ -536,7 +536,7 @@ const convertConfigVar = (
             },
           };
         },
-        {}
+        {},
       ),
       orgOnly,
       meta,
@@ -546,7 +546,7 @@ const convertConfigVar = (
   if (isConnectionReferenceConfigVar(configVar)) {
     const { ref, inputs } = convertComponentReference(
       configVar.connection,
-      componentRegistry
+      componentRegistry,
     );
 
     const {
@@ -593,7 +593,7 @@ const convertConfigVar = (
       "timeZone",
       "codeLanguage",
       "collectionType",
-    ])
+    ]),
   ) as ServerDefaultRequiredConfigVariable;
 
   if (isScheduleConfigVar(configVar)) {
@@ -611,7 +611,7 @@ const convertConfigVar = (
   if (isDataSourceReferenceConfigVar(configVar)) {
     const { ref, inputs } = convertComponentReference(
       configVar.dataSource,
-      componentRegistry
+      componentRegistry,
     );
     result.dataType =
       componentRegistry[ref.component.key]["dataSources"][ref.key][
@@ -627,7 +627,7 @@ const convertConfigVar = (
 /** Maps the step name field to a fully qualified input. */
 const fieldNameToReferenceInput = (
   stepName: string,
-  fieldName: string | null | undefined
+  fieldName: string | null | undefined,
 ): ServerInput | undefined =>
   fieldName
     ? { type: "reference", value: `${stepName}.results.${fieldName}` }
@@ -638,7 +638,7 @@ const fieldNameToReferenceInput = (
  *  on the resulting object, which will be turned into a Component. */
 const flowFunctionKey = (
   flowName: string,
-  functionName: "onExecution" | "onTrigger"
+  functionName: "onExecution" | "onTrigger",
 ): string => {
   const flowKey = flowName
     .replace(/[^0-9a-zA-Z]+/g, " ")
@@ -647,7 +647,7 @@ const flowFunctionKey = (
     .map((w, i) =>
       i === 0
         ? w.toLowerCase()
-        : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+        : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(),
     )
     .join("");
 
@@ -657,7 +657,7 @@ const flowFunctionKey = (
 type ComponentActionInvokeFunction = <TValues extends Record<string, any>>(
   ref: ServerComponentReference,
   context: ActionContext,
-  values: TValues
+  values: TValues,
 ) => Promise<unknown>;
 
 type ComponentMethods = Record<
@@ -668,7 +668,7 @@ type ComponentMethods = Record<
 const convertOnExecution =
   (
     onExecution: ActionPerformFunction,
-    componentRegistry: ComponentRegistry
+    componentRegistry: ComponentRegistry,
   ): ServerActionPerformFunction =>
   (context, params) => {
     const {
@@ -682,21 +682,21 @@ const convertOnExecution =
 
     // Construct the component methods from the component registry
     const componentMethods = Object.entries(
-      componentRegistry
+      componentRegistry,
     ).reduce<ComponentMethods>(
       (
         accumulator,
         [
           registryComponentKey,
           { key: componentKey, actions, public: isPublic, signature },
-        ]
+        ],
       ) => {
         const componentActions = Object.entries(actions).reduce<
           Record<string, ComponentManifestAction["perform"]>
         >((actionsAccumulator, [actionKey, action]) => {
           // Define the method to be called for the action
           const invokeAction: ComponentManifestAction["perform"] = async (
-            values
+            values,
           ) => {
             // Transform the input values based on the action's inputs
             const transformedValues = Object.entries(values).reduce<
@@ -721,7 +721,7 @@ const convertOnExecution =
                 key: actionKey,
               },
               context,
-              transformedValues
+              transformedValues,
             );
           };
           return {
@@ -735,12 +735,12 @@ const convertOnExecution =
           [registryComponentKey]: componentActions,
         };
       },
-      {}
+      {},
     );
 
     return onExecution(
       { ...remainingContext, components: componentMethods },
-      params
+      params,
     );
   };
 
@@ -755,7 +755,7 @@ const codeNativeIntegrationComponent = (
     componentRegistry = {},
   }: IntegrationDefinition,
   referenceKey: string,
-  configVars: Record<string, ConfigVar>
+  configVars: Record<string, ConfigVar>,
 ): ServerComponent => {
   const convertedActions = flows.reduce<Record<string, ServerAction>>(
     (result, { name, onExecution }) => {
@@ -770,13 +770,13 @@ const codeNativeIntegrationComponent = (
           },
           perform: convertOnExecution(
             onExecution as ServerActionPerformFunction,
-            componentRegistry
+            componentRegistry,
           ),
           inputs: [],
         },
       };
     },
-    {}
+    {},
   );
 
   const convertedTriggers = flows.reduce<Record<string, ServerTrigger>>(
@@ -807,7 +807,7 @@ const codeNativeIntegrationComponent = (
         },
       };
     },
-    {}
+    {},
   );
 
   const convertedDataSources = Object.entries(configVars).reduce<
@@ -842,7 +842,7 @@ const codeNativeIntegrationComponent = (
     }
 
     const convertedInputs = Object.entries(configVar.inputs).map(
-      ([key, value]) => convertInput(key, value)
+      ([key, value]) => convertInput(key, value),
     );
 
     const connection = pick(configVar, ["oauth2Type", "iconPath"]);

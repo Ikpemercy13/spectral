@@ -25,10 +25,10 @@ export const isSpectralError = (payload: unknown): payload is SpectralError =>
     payload &&
       typeof payload === "object" &&
       "isSpectralError" in payload &&
-      (payload as SpectralError).isSpectralError === true
+      (payload as SpectralError).isSpectralError === true,
   );
 
 export const isConnectionError = (
-  payload: unknown
+  payload: unknown,
 ): payload is ConnectionError =>
   isSpectralError(payload) && "connection" in payload;

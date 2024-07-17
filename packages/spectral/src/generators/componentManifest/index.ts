@@ -41,7 +41,7 @@ export const createComponentManifest = async ({
 
   if (verbose) {
     console.info(
-      `Creating a component manifest for ${component.display.label}...`
+      `Creating a component manifest for ${component.display.label}...`,
     );
     console.log("");
   }
@@ -98,6 +98,6 @@ export const createComponentManifest = async ({
   });
 
   console.info(
-    `Component manifest created successfully for ${component.display.label} in ${destinationDir}!`
+    `Component manifest created successfully for ${component.display.label} in ${destinationDir}!`,
   );
 };

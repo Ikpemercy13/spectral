@@ -20,7 +20,7 @@ import util from "../util";
 export type ValidationResult = [boolean] | [boolean, string];
 
 export const validate = (
-  expression: ConditionalExpression
+  expression: ConditionalExpression,
 ): ValidationResult => {
   if (!(expression instanceof Array)) {
     return [false, `Invalid expression syntax: '${expression}'`];
@@ -29,7 +29,7 @@ export const validate = (
 
   if (operator in BooleanOperator) {
     if (operator === BooleanOperator.and || operator === BooleanOperator.or) {
-      const [, ...predicates] = expression as BooleanExpression;
+      const [, ...predicates] = expression;
 
       return predicates.reduce(
         (previous, current) => {
@@ -41,7 +41,7 @@ export const validate = (
 
           return previous;
         },
-        [true] as ValidationResult
+        [true] as ValidationResult,
       );
     }
 

@@ -16,7 +16,7 @@ export interface ComponentHooks {
 /** Defines attributes of a Component. */
 export type ComponentDefinition<
   TPublic extends boolean,
-  TKey extends string
+  TKey extends string,
 > = {
   /** Specifies unique key for this Component. */
   key: TKey;

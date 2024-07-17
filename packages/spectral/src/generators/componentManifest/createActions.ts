@@ -31,7 +31,7 @@ export const createActions = async ({
         return {
           key: action.key || actionKey,
         };
-      }
+      },
     ),
     dryRun,
     verbose,
@@ -60,7 +60,7 @@ export const createActions = async ({
         sourceDir,
         destinationDir,
       });
-    })
+    }),
   );
 
   if (verbose) {

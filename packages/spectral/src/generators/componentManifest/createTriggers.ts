@@ -31,7 +31,7 @@ export const createTriggers = async ({
         return {
           key: trigger.key || triggerKey,
         };
-      }
+      },
     ),
     dryRun,
     verbose,
@@ -61,8 +61,8 @@ export const createTriggers = async ({
           sourceDir,
           destinationDir,
         });
-      }
-    )
+      },
+    ),
   );
 
   if (verbose) {

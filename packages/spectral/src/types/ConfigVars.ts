@@ -14,7 +14,6 @@ import {
   isComponentReference,
   ConfigPage,
   ConfigPages,
-  UserLevelConfigPages,
   ConfigPageElement,
   ComponentRegistryDataSource,
   ComponentRegistryConnection,
@@ -48,7 +47,7 @@ type ConfigVarDataTypeDefaultValueMap<
     objectSelection: ObjectSelection;
     objectFieldMap: ObjectFieldMap;
     jsonForm: JSONForm;
-  }
+  },
 > = TMap;
 
 type ConfigVarDataTypeRuntimeValueMap<
@@ -64,7 +63,7 @@ type ConfigVarDataTypeRuntimeValueMap<
     objectSelection: ObjectSelection;
     objectFieldMap: ObjectFieldMap;
     jsonForm: unknown;
-  }
+  },
 > = TMap;
 
 /** Choices of collection types for multi-value Config Vars. */
@@ -100,7 +99,7 @@ type BaseConfigVar = {
 
 type GetDynamicProperties<
   TValue,
-  TCollectionType extends CollectionType | undefined
+  TCollectionType extends CollectionType | undefined,
 > = TCollectionType extends undefined
   ? {
       defaultValue?: TValue;
@@ -108,18 +107,18 @@ type GetDynamicProperties<
       collectionType?: undefined;
     }
   : TCollectionType extends "valuelist"
-  ? {
-      defaultValue?: TValue[];
-      /** Optional value to specify the type of collection if the Config Var is multi-value. */
-      collectionType: "valuelist";
-    }
-  : {
-      defaultValue?:
-        | Record<string, TValue>
-        | Array<{ key: string; value: TValue }>;
-      /** Optional value to specify the type of collection if the Config Var is multi-value. */
-      collectionType: "keyvaluelist";
-    };
+    ? {
+        defaultValue?: TValue[];
+        /** Optional value to specify the type of collection if the Config Var is multi-value. */
+        collectionType: "valuelist";
+      }
+    : {
+        defaultValue?:
+          | Record<string, TValue>
+          | Array<{ key: string; value: TValue }>;
+        /** Optional value to specify the type of collection if the Config Var is multi-value. */
+        collectionType: "keyvaluelist";
+      };
 
 type StandardConfigVarDynamicProperties<TDataType extends ConfigVarDataType> =
   | CollectionType
@@ -195,29 +194,29 @@ export type StandardConfigVar =
 
 // Data Source Config Vars
 type BaseDataSourceConfigVar<
-  TDataSourceType extends DataSourceType = DataSourceType
+  TDataSourceType extends DataSourceType = DataSourceType,
 > = TDataSourceType extends CollectionDataSourceType
   ? {
       dataSourceType: TDataSourceType;
       collectionType?: CollectionType | undefined;
     } & BaseConfigVar
   : TDataSourceType extends Exclude<DataSourceType, CollectionDataSourceType>
-  ? BaseConfigVar & {
-      dataSourceType: TDataSourceType;
-      collectionType?: undefined;
-    }
-  :
-      | ({
-          dataSourceType: Extract<CollectionDataSourceType, TDataSourceType>;
-          collectionType: CollectionType;
-        } & BaseConfigVar)
-      | (BaseConfigVar & {
-          dataSourceType: Extract<
-            Exclude<DataSourceType, CollectionDataSourceType>,
-            TDataSourceType
-          >;
-          collectionType?: undefined;
-        });
+    ? BaseConfigVar & {
+        dataSourceType: TDataSourceType;
+        collectionType?: undefined;
+      }
+    :
+        | ({
+            dataSourceType: Extract<CollectionDataSourceType, TDataSourceType>;
+            collectionType: CollectionType;
+          } & BaseConfigVar)
+        | (BaseConfigVar & {
+            dataSourceType: Extract<
+              Exclude<DataSourceType, CollectionDataSourceType>,
+              TDataSourceType
+            >;
+            collectionType?: undefined;
+          });
 
 type DataSourceDefinitionConfigVar =
   DataSourceType extends infer TDataSourceType
@@ -235,15 +234,14 @@ type DataSourceDefinitionConfigVar =
     : never;
 
 type DataSourceReferenceConfigVar =
-  ComponentRegistryDataSource extends infer TDataSourceReference
-    ? TDataSourceReference extends ComponentRegistryDataSource
-      ? Omit<
-          BaseDataSourceConfigVar<TDataSourceReference["dataSourceType"]>,
-          "dataSourceType"
-        > & {
-          dataSource: TDataSourceReference["reference"];
-        }
-      : never
+  ComponentRegistryDataSource extends infer TDataSourceReference extends
+    ComponentRegistryDataSource
+    ? Omit<
+        BaseDataSourceConfigVar<TDataSourceReference["dataSourceType"]>,
+        "dataSourceType"
+      > & {
+        dataSource: TDataSourceReference["reference"];
+      }
     : never;
 
 /** Defines attributes of a data source Config Var. */
@@ -297,16 +295,16 @@ export type ConfigVar =
 
 type WithCollectionType<
   TValue,
-  TCollectionType extends CollectionType | undefined
+  TCollectionType extends CollectionType | undefined,
 > = undefined | unknown extends TCollectionType
   ? TValue
   : TCollectionType extends "valuelist"
-  ? TValue[]
-  : Array<{ key: string; value: TValue }>;
+    ? TValue[]
+    : Array<{ key: string; value: TValue }>;
 
 type GetDataSourceReference<
   TComponent extends DataSourceReference["component"],
-  TKey extends DataSourceReference["key"]
+  TKey extends DataSourceReference["key"],
 > = ComponentRegistryDataSource extends infer TDataSourceReference
   ? TDataSourceReference extends ComponentRegistryDataSource
     ? TComponent extends TDataSourceReference["reference"]["component"]
@@ -325,31 +323,31 @@ type DataSourceToRuntimeType<TElement extends ConfigPageElement> =
         : never
       : never
     : TElement extends DataSourceReferenceConfigVar
-    ? GetDataSourceReference<
-        TElement["dataSource"]["component"],
-        TElement["dataSource"]["key"]
-      >["dataSourceType"] extends infer TType
-      ? TType extends DataSourceType
-        ? ConfigVarDataTypeRuntimeValueMap[TType]
+      ? GetDataSourceReference<
+          TElement["dataSource"]["component"],
+          TElement["dataSource"]["key"]
+        >["dataSourceType"] extends infer TType
+        ? TType extends DataSourceType
+          ? ConfigVarDataTypeRuntimeValueMap[TType]
+          : never
         : never
-      : never
-    : never;
+      : never;
 
 type ElementToRuntimeType<TElement extends ConfigPageElement> =
   TElement extends ConfigVar
     ? TElement extends ConnectionConfigVar
       ? Connection
       : TElement extends StandardConfigVar
-      ? WithCollectionType<
-          ConfigVarDataTypeRuntimeValueMap[TElement["dataType"]],
-          TElement["collectionType"]
-        >
-      : TElement extends DataSourceConfigVar
-      ? WithCollectionType<
-          DataSourceToRuntimeType<TElement>,
-          TElement["collectionType"]
-        >
-      : never
+        ? WithCollectionType<
+            ConfigVarDataTypeRuntimeValueMap[TElement["dataType"]],
+            TElement["collectionType"]
+          >
+        : TElement extends DataSourceConfigVar
+          ? WithCollectionType<
+              DataSourceToRuntimeType<TElement>,
+              TElement["collectionType"]
+            >
+          : never
     : never;
 
 type ExtractConfigVars<TConfigPages extends { [key: string]: ConfigPage }> =
@@ -370,9 +368,7 @@ type ExtractConfigVars<TConfigPages extends { [key: string]: ConfigPage }> =
     : never;
 
 export type ConfigVars = Prettify<
-  UnionToIntersection<
-    ExtractConfigVars<ConfigPages> | ExtractConfigVars<UserLevelConfigPages>
-  >
+  UnionToIntersection<ExtractConfigVars<ConfigPages>>
 >;
 
 export const isCodeConfigVar = (cv: ConfigVar): cv is CodeConfigVar =>
@@ -382,7 +378,7 @@ export const isScheduleConfigVar = (cv: ConfigVar): cv is ScheduleConfigVar =>
   "dataType" in cv && cv.dataType === "schedule";
 
 export const isDataSourceDefinitionConfigVar = (
-  cv: ConfigVar
+  cv: ConfigVar,
 ): cv is DataSourceDefinitionConfigVar =>
   "dataSourceType" in cv && "perform" in cv && typeof cv.perform === "function";
 
@@ -390,7 +386,7 @@ export const isDataSourceReferenceConfigVar = (
   // FIXME: Module augmetation causes this to produce a compile error while
   // running `tsd`. I'm pretty uncertain how this happens but leaving as
   // `unkonwn` is fine for now.
-  cv: unknown
+  cv: unknown,
 ): cv is DataSourceReferenceConfigVar =>
   typeof cv === "object" &&
   cv !== null &&
@@ -398,7 +394,7 @@ export const isDataSourceReferenceConfigVar = (
   isComponentReference((cv as DataSourceReferenceConfigVar).dataSource);
 
 export const isConnectionDefinitionConfigVar = (
-  cv: ConfigVar
+  cv: ConfigVar,
 ): cv is ConnectionDefinitionConfigVar =>
   "dataType" in cv && cv.dataType === "connection" && "inputs" in cv;
 
@@ -406,7 +402,7 @@ export const isConnectionReferenceConfigVar = (
   // FIXME: Module augmetation causes this to produce a compile error while
   // running `tsd`. I'm pretty uncertain how this happens but leaving as
   // `unkonwn` is fine for now.
-  cv: unknown
+  cv: unknown,
 ): cv is ConnectionReferenceConfigVar =>
   typeof cv === "object" &&
   cv !== null &&

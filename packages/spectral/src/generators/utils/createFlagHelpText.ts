@@ -27,7 +27,7 @@ export const createFlagHelpText = ({
       }
 
       return { flag, description };
-    }
+    },
   );
 
   formattedFlags.forEach(({ flag, description }) => {

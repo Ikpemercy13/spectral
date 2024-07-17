@@ -24,28 +24,28 @@ import {
 
 export const isObjectWithOneTruthyKey = (
   value: unknown,
-  keys: string[]
+  keys: string[],
 ): boolean => {
   return (
     value !== null &&
     typeof value === "object" &&
     keys.some(
       (key) =>
-        key in value && Boolean((value as Record<string, unknown>)?.[key])
+        key in value && Boolean((value as Record<string, unknown>)?.[key]),
     )
   );
 };
 
 export const isObjectWithTruthyKeys = (
   value: unknown,
-  keys: string[]
+  keys: string[],
 ): boolean => {
   return (
     value !== null &&
     typeof value === "object" &&
     keys.every(
       (key) =>
-        key in value && Boolean((value as Record<string, unknown>)?.[key])
+        key in value && Boolean((value as Record<string, unknown>)?.[key]),
     )
   );
 };
@@ -91,7 +91,7 @@ const toObjectSelection = (value: unknown): ObjectSelection => {
   throw new Error(
     `Value '${
       typeof value === "string" ? value : JSON.stringify(value)
-    }' cannot be coerced to ObjectSelection.`
+    }' cannot be coerced to ObjectSelection.`,
   );
 };
 
@@ -111,7 +111,7 @@ const isObjectFieldMap = (value: unknown): value is ObjectFieldMap => {
       fields.every(
         (item) =>
           isObjectWithTruthyKeys(item, ["field"]) &&
-          isElement((item as Record<string, unknown>)?.field)
+          isElement((item as Record<string, unknown>)?.field),
       )
     );
   }
@@ -136,7 +136,7 @@ const toObjectFieldMap = (value: unknown): ObjectFieldMap => {
   throw new Error(
     `Value '${
       typeof value === "string" ? value : JSON.stringify(value)
-    }' cannot be coerced to ObjectFieldMap.`
+    }' cannot be coerced to ObjectFieldMap.`,
   );
 };
 
@@ -169,7 +169,7 @@ const toJSONForm = (value: unknown): JSONForm => {
   throw new Error(
     `Value '${
       typeof value === "string" ? value : JSON.stringify(value)
-    }' cannot be coerced to JSONForm.`
+    }' cannot be coerced to JSONForm.`,
   );
 };
 
@@ -315,7 +315,7 @@ const isBigInt = (value: unknown): value is bigint => typeof value === "bigint";
  * @param value The value to coerce to bigint.
  * @returns This function returns the bigint representation of `value`.
  */
-const toBigInt = (value: unknown): BigInt => {
+const toBigInt = (value: unknown): bigint => {
   if (isBigInt(value)) {
     return value;
   }
@@ -407,14 +407,14 @@ const isSchedule = (value: unknown): boolean =>
  */
 const keyValPairListToObject = <TValue = unknown>(
   kvpList: KeyValuePair<unknown>[],
-  valueConverter?: (value: unknown) => TValue
+  valueConverter?: (value: unknown) => TValue,
 ): Record<string, TValue> => {
   return (kvpList || []).reduce(
     (result, { key, value }) => ({
       ...result,
       [key]: valueConverter ? valueConverter(value) : value,
     }),
-    {}
+    {},
   );
 };
 
@@ -589,7 +589,7 @@ const isJSON = (value: string): boolean => {
 const toJSON = (
   value: unknown,
   prettyPrint = true,
-  retainKeyOrder = false
+  retainKeyOrder = false,
 ): string => {
   const stringify = configure({
     circularValue: undefined,
@@ -608,7 +608,7 @@ const toJSON = (
  * @returns This function returns a header object
  * */
 export const lowerCaseHeaders = (
-  headers: Record<string, string>
+  headers: Record<string, string>,
 ): Record<string, string> =>
   Object.entries(headers).reduce((result, [key, val]) => {
     return { ...result, [key.toLowerCase()]: val };
@@ -644,7 +644,7 @@ export const toObject = (value: unknown): object => {
  */
 const cleanObject = (
   obj: Record<string, unknown>,
-  predicate?: (v: any) => boolean
+  predicate?: (v: any) => boolean,
 ): Record<string, unknown> => {
   const defaultPredicate = (v: any) =>
     v === undefined || v === null || v === "";

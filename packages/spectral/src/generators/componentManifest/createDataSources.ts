@@ -32,7 +32,7 @@ export const createDataSources = async ({
         return {
           key: dataSource.key || dataSourceKey,
         };
-      }
+      },
     ),
     dryRun,
     verbose,
@@ -63,8 +63,8 @@ export const createDataSources = async ({
           sourceDir,
           destinationDir,
         });
-      }
-    )
+      },
+    ),
   );
 
   if (verbose) {
@@ -133,7 +133,7 @@ const renderDataSource = async ({
     destination: path.join(
       destinationDir,
       "dataSources",
-      `${dataSource.key}.ts`
+      `${dataSource.key}.ts`,
     ),
     data: {
       dataSource,

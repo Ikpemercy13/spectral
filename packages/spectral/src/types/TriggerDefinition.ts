@@ -10,7 +10,7 @@ import {
 
 const optionChoices = ["invalid", "valid", "required"] as const;
 
-export type TriggerOptionChoice = typeof optionChoices[number];
+export type TriggerOptionChoice = (typeof optionChoices)[number];
 
 export const TriggerOptionChoices: TriggerOptionChoice[] = [...optionChoices];
 
@@ -22,7 +22,7 @@ export interface TriggerDefinition<
   TInputs extends Inputs,
   TConfigVars extends ConfigVarResultCollection,
   TAllowsBranching extends boolean,
-  TResult extends TriggerResult<TAllowsBranching, TriggerPayload>
+  TResult extends TriggerResult<TAllowsBranching, TriggerPayload>,
 > {
   /** Defines how the Trigger is displayed in the Prismatic interface. */
   display: ActionDisplayDefinition;

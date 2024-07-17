@@ -34,7 +34,7 @@ export interface ActionPerformBranchingDataReturn<ReturnData>
 /** Required return type of all action perform functions */
 export type ActionPerformReturn<
   AllowsBranching extends boolean | undefined,
-  ReturnData
+  ReturnData,
 > =
   | (AllowsBranching extends true
       ? ActionPerformBranchingDataReturn<ReturnData>

@@ -62,7 +62,7 @@ type ComponentReferenceTypeValueMap<
     dataSources: ValueExpression<TValue> | ConfigVarExpression;
     connections: (ValueExpression<TValue> | ConfigVarExpression) &
       ConnectionInputPermissionAndVisibility;
-  }
+  },
 > = TMap;
 
 export type ComponentReference<
@@ -80,7 +80,7 @@ export type ComponentReference<
       [key: string]: ValueExpression | ConfigVarExpression;
     };
     template?: string;
-  }
+  },
 > = TComponentReference;
 
 export const isComponentReference = (ref: unknown): ref is ComponentReference =>

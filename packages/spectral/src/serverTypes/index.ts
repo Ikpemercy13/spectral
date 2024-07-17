@@ -64,7 +64,7 @@ export type ActionContext<
   TComponentActions extends Record<
     string,
     ComponentManifest["actions"]
-  > = Record<string, ComponentManifest["actions"]>
+  > = Record<string, ComponentManifest["actions"]>,
 > = {
   logger: ActionLogger;
   instanceState: Record<string, unknown>;
@@ -146,14 +146,14 @@ export type TriggerResult =
 export type TriggerPerformFunction = (
   context: ActionContext,
   payload: TriggerPayload,
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ) => Promise<TriggerResult>;
 
 export type TriggerEventFunctionResult = TriggerEventFunctionReturn | void;
 
 export type TriggerEventFunction = (
   context: ActionContext,
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ) => Promise<TriggerEventFunctionResult>;
 
 export interface Trigger {
@@ -177,7 +177,7 @@ export interface Trigger {
 }
 
 export interface DataSourceContext<
-  TConfigVars extends ConfigVarResultCollection = ConfigVarResultCollection
+  TConfigVars extends ConfigVarResultCollection = ConfigVarResultCollection,
 > {
   logger: ActionLogger;
   configVars: TConfigVars;
@@ -193,7 +193,7 @@ export type DataSourceResult = {
 
 export type DataSourcePerformFunction = (
   context: DataSourceContext,
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ) => Promise<DataSourceResult>;
 
 export interface DataSource {
@@ -277,7 +277,7 @@ export type ActionPerformReturn =
 
 export type ActionPerformFunction = (
   context: ActionContext,
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ) => Promise<ActionPerformReturn>;
 
 interface InputFieldChoice {

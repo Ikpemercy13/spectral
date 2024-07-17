@@ -118,7 +118,7 @@ export type InputFieldDefinition =
   | DynamicFieldSelectionInputField;
 
 export type InputCleanFunction<TValue, TResult = TValue> = (
-  value: TValue
+  value: TValue,
 ) => TResult;
 
 interface BaseInputField {

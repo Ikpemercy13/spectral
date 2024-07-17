@@ -25,7 +25,7 @@ const pastDates = (): fc.Arbitrary<DateLike> =>
     "2021-03-20T12:50:30.105Z",
     1631568050,
     "1631568051",
-    new Date("2021-03-20T12:50:30.105Z")
+    new Date("2021-03-20T12:50:30.105Z"),
   );
 
 const futureDates = (): fc.Arbitrary<DateLike> =>
@@ -34,7 +34,7 @@ const futureDates = (): fc.Arbitrary<DateLike> =>
     "2030-03-20T12:50:30.105Z",
     1905784188,
     "1905784189",
-    new Date("2030-03-20T12:50:30.105Z")
+    new Date("2030-03-20T12:50:30.105Z"),
   );
 
 const equivalentDates = (): fc.Arbitrary<DateLike> =>
@@ -42,7 +42,7 @@ const equivalentDates = (): fc.Arbitrary<DateLike> =>
     "2021-03-20T00:00:00.000Z",
     "1616198400",
     1616198400,
-    new Date("2021-03-20T00:00:00.000Z")
+    new Date("2021-03-20T00:00:00.000Z"),
   );
 
 describe("evaluate", () => {
@@ -66,7 +66,7 @@ describe("evaluate", () => {
             BinaryOperator.equal,
             left.toString(),
             right.toString(),
-          ]
+          ],
         ),
       // notEqual
       fc
@@ -77,7 +77,7 @@ describe("evaluate", () => {
             BinaryOperator.notEqual,
             left.toString(),
             right.toString(),
-          ]
+          ],
         ),
       // greaterThan
       fc
@@ -88,7 +88,7 @@ describe("evaluate", () => {
             BinaryOperator.greaterThan,
             left.toString(),
             right.toString(),
-          ]
+          ],
         ),
       // greaterThanEqual
       fc
@@ -99,7 +99,7 @@ describe("evaluate", () => {
             BinaryOperator.greaterThanOrEqual,
             left.toString(),
             right.toString(),
-          ]
+          ],
         ),
       // lessThan
       fc
@@ -110,7 +110,7 @@ describe("evaluate", () => {
             BinaryOperator.lessThan,
             left.toString(),
             right.toString(),
-          ]
+          ],
         ),
       // lessThanEqual
       fc
@@ -121,7 +121,7 @@ describe("evaluate", () => {
             BinaryOperator.lessThanOrEqual,
             left.toString(),
             right.toString(),
-          ]
+          ],
         ),
       // in
       fc
@@ -136,7 +136,7 @@ describe("evaluate", () => {
             BinaryOperator.in,
             left,
             right,
-          ]
+          ],
         ),
       // notIn
       fc
@@ -147,7 +147,7 @@ describe("evaluate", () => {
             BinaryOperator.notIn,
             left,
             right,
-          ]
+          ],
         ),
       // exactlyMatches
       fc
@@ -158,7 +158,7 @@ describe("evaluate", () => {
             BinaryOperator.exactlyMatches,
             left,
             right,
-          ]
+          ],
         ),
       // doesNotExactlyMatch
       fc
@@ -170,7 +170,7 @@ describe("evaluate", () => {
             BinaryOperator.doesNotExactlyMatch,
             left,
             right,
-          ]
+          ],
         ),
       // startsWith
       fc
@@ -181,7 +181,7 @@ describe("evaluate", () => {
             BinaryOperator.startsWith,
             left,
             right,
-          ]
+          ],
         ),
       // doesNotStartWith
       fc
@@ -192,7 +192,7 @@ describe("evaluate", () => {
             BinaryOperator.doesNotStartWith,
             left,
             right,
-          ]
+          ],
         ),
       // endsWith
       fc
@@ -203,7 +203,7 @@ describe("evaluate", () => {
             BinaryOperator.endsWith,
             left,
             right,
-          ]
+          ],
         ),
       // doesNotEndWith
       fc
@@ -214,13 +214,13 @@ describe("evaluate", () => {
             BinaryOperator.doesNotEndWith,
             left,
             right,
-          ]
+          ],
         ),
       // isTrue
       nonIntegerString
         .filter((left) => Boolean(left) === true)
         .filter(
-          (left) => !["f", "false", "n", "no"].includes(left.toLowerCase())
+          (left) => !["f", "false", "n", "no"].includes(left.toLowerCase()),
         )
         .map((left): ConditionalExpression => [UnaryOperator.isTrue, left]),
       // isFalse
@@ -232,7 +232,7 @@ describe("evaluate", () => {
       fc
         .falsy()
         .map(
-          (left): ConditionalExpression => [UnaryOperator.doesNotExist, left]
+          (left): ConditionalExpression => [UnaryOperator.doesNotExist, left],
         ),
       // dateTimeAfter
       fc
@@ -243,7 +243,7 @@ describe("evaluate", () => {
             BinaryOperator.dateTimeAfter,
             left,
             right,
-          ]
+          ],
         ),
       fc
         .tuple(futureDates(), pastDates())
@@ -252,7 +252,7 @@ describe("evaluate", () => {
             BinaryOperator.dateTimeAfter,
             left,
             right,
-          ]
+          ],
         ),
       // dateTimeBefore
       fc
@@ -263,7 +263,7 @@ describe("evaluate", () => {
             BinaryOperator.dateTimeBefore,
             left,
             right,
-          ]
+          ],
         ),
       fc
         .tuple(pastDates(), futureDates())
@@ -272,7 +272,7 @@ describe("evaluate", () => {
             BinaryOperator.dateTimeBefore,
             left,
             right,
-          ]
+          ],
         ),
       // dateTimeSame
       fc
@@ -282,7 +282,7 @@ describe("evaluate", () => {
             BinaryOperator.dateTimeSame,
             left,
             left,
-          ]
+          ],
         ),
       fc
         .tuple(equivalentDates(), equivalentDates())
@@ -291,8 +291,8 @@ describe("evaluate", () => {
             BinaryOperator.dateTimeSame,
             left,
             right,
-          ]
-        )
+          ],
+        ),
     );
 
     const simpleFalseExpression = fc
@@ -303,86 +303,86 @@ describe("evaluate", () => {
           BinaryOperator.equal,
           left.toString(),
           right.toString(),
-        ]
+        ],
       );
 
     const andTrueExpressions = fc
       .tuple(simpleTrueExpression, simpleTrueExpression, simpleTrueExpression)
       .map(
-        (predicates): BooleanExpression => [BooleanOperator.and, ...predicates]
+        (predicates): BooleanExpression => [BooleanOperator.and, ...predicates],
       );
 
     const andFalseExpressions = fc
       .tuple(simpleTrueExpression, simpleTrueExpression, simpleFalseExpression)
       .map(
-        (predicates): BooleanExpression => [BooleanOperator.and, ...predicates]
+        (predicates): BooleanExpression => [BooleanOperator.and, ...predicates],
       );
 
     const orTrueExpressions = fc
       .tuple(simpleFalseExpression, simpleFalseExpression, simpleTrueExpression)
       .map(
-        (predicates): BooleanExpression => [BooleanOperator.or, ...predicates]
+        (predicates): BooleanExpression => [BooleanOperator.or, ...predicates],
       );
 
     const orFalseExpressions = fc
       .tuple(
         simpleFalseExpression,
         simpleFalseExpression,
-        simpleFalseExpression
+        simpleFalseExpression,
       )
       .map(
-        (predicates): BooleanExpression => [BooleanOperator.or, ...predicates]
+        (predicates): BooleanExpression => [BooleanOperator.or, ...predicates],
       );
 
     const trueExpressions = fc.oneof(
       simpleTrueExpression,
       andTrueExpressions,
-      orTrueExpressions
+      orTrueExpressions,
     );
 
     const falseExpressions = fc.oneof(
       simpleFalseExpression,
       andFalseExpressions,
-      orFalseExpressions
+      orFalseExpressions,
     );
 
     it("should evaluate expressions", () => {
       fc.assert(
         fc.property(trueExpressions, (expression) =>
-          expect(evaluate(expression)).toStrictEqual(true)
-        )
+          expect(evaluate(expression)).toStrictEqual(true),
+        ),
       );
     });
 
     it("should evaluate false expressions", () => {
       fc.assert(
         fc.property(falseExpressions, (expression) =>
-          expect(evaluate(expression)).toStrictEqual(false)
-        )
+          expect(evaluate(expression)).toStrictEqual(false),
+        ),
       );
     });
 
     it("should deep compare equality while attempting to convert types", () => {
       expect(
-        evaluate([BinaryOperator.equal, { a: "" }, { a: false }])
+        evaluate([BinaryOperator.equal, { a: "" }, { a: false }]),
       ).toStrictEqual(true);
     });
 
     it("should strictly deep compare equality", () => {
       expect(
-        evaluate([BinaryOperator.exactlyMatches, { a: "" }, { a: false }])
+        evaluate([BinaryOperator.exactlyMatches, { a: "" }, { a: false }]),
       ).toStrictEqual(false);
     });
 
     it("should deep compare inequality while attempting to convert types", () => {
       expect(
-        evaluate([BinaryOperator.notEqual, { a: "" }, { a: false }])
+        evaluate([BinaryOperator.notEqual, { a: "" }, { a: false }]),
       ).toStrictEqual(false);
     });
 
     it("should strictly deep compare inequality", () => {
       expect(
-        evaluate([BinaryOperator.doesNotExactlyMatch, { a: "" }, { a: false }])
+        evaluate([BinaryOperator.doesNotExactlyMatch, { a: "" }, { a: false }]),
       ).toStrictEqual(true);
     });
   });
@@ -397,19 +397,19 @@ describe("evaluate", () => {
 
   test("evaluate BinaryOperator.in with array of stringified numbers and value that is a stringified number", () => {
     expect(evaluate([BinaryOperator.in, "2", ["1", "2", "3"]])).toStrictEqual(
-      true
+      true,
     );
   });
 
   test("evaluate BinaryOperator.in with array of numbers including zero and value that is a stringified false", () => {
     expect(evaluate([BinaryOperator.in, "false", [0, 1, 2]])).toStrictEqual(
-      false
+      false,
     );
   });
 
   test("evaluate BinaryOperator.in with array of numbers including zero and value that is a false", () => {
     expect(evaluate([BinaryOperator.in, false, [0, 1, 2]])).toStrictEqual(
-      false
+      false,
     );
   });
 
@@ -420,14 +420,14 @@ describe("evaluate", () => {
     const invalidExpressions = fc.tuple(
       fc.string().filter((v) => !Object.keys(TermOperatorPhrase).includes(v)),
       fc.string(),
-      fc.string()
+      fc.string(),
     );
 
     it("should throw error on invalid expression", () => {
       fc.assert(
         fc.property(invalidExpressions, (expression) =>
-          expect(() => evaluate(expression as any)).toThrow()
-        )
+          expect(() => evaluate(expression as any)).toThrow(),
+        ),
       );
     });
 
@@ -436,7 +436,7 @@ describe("evaluate", () => {
         fc.property(invalidExpressions, () => {
           const res = evaluate([UnaryOperator.isEmpty, []]);
           expect(res).toBe(true);
-        })
+        }),
       );
       expect(evaluate([UnaryOperator.isEmpty, ""])).toStrictEqual(true);
       expect(evaluate([UnaryOperator.isEmpty, "abc"])).toStrictEqual(false);
@@ -444,7 +444,7 @@ describe("evaluate", () => {
         fc.property(invalidExpressions, () => {
           const res = evaluate([UnaryOperator.isEmpty, ["Hello ", "World"]]);
           expect(res).toBe(false);
-        })
+        }),
       );
     });
   });
@@ -470,7 +470,7 @@ describe("evaluate", () => {
     });
     test("test 'array' contains when item in 'set'", () => {
       expect(
-        contains([{ foo: null, bar: null }], { foo: null, bar: null })
+        contains([{ foo: null, bar: null }], { foo: null, bar: null }),
       ).toStrictEqual(false);
     });
     test("test 'set' contains when item in 'set'", () => {
@@ -481,7 +481,7 @@ describe("evaluate", () => {
     });
     test("test 'set' contains subset", () => {
       expect(
-        contains({ key: { foo: null, bar: null } }, { foo: null, bar: null })
+        contains({ key: { foo: null, bar: null } }, { foo: null, bar: null }),
       ).toStrictEqual(false);
     });
   });

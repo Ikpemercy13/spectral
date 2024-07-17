@@ -18,7 +18,7 @@ export interface ActionDefinition<
   TReturn extends ActionPerformReturn<
     TAllowsBranching,
     unknown
-  > = ActionPerformReturn<TAllowsBranching, unknown>
+  > = ActionPerformReturn<TAllowsBranching, unknown>,
 > {
   /** Defines how the Action is displayed in the Prismatic interface. */
   display: ActionDisplayDefinition;

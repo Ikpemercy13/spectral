@@ -21,14 +21,14 @@ export const getComponentSignatureWithPrism = async ({
     }`,
     {
       windowsHide: true,
-    }
+    },
   );
 
   const signatureKey = stdout.replace(/\n$/, "");
 
   if (!signatureKey) {
     console.log(
-      "Failed to get component signature, please verify your component has been published."
+      "Failed to get component signature, please verify your component has been published.",
     );
     process.exit(1);
   }
